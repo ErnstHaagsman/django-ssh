@@ -4,30 +4,28 @@ from django.http import HttpResponse
 
 # Create your views here.
 from django.urls import reverse
+from django.views import generic
 
 from sshapp.models import Question, Choice
 
 
-def index(request):
-    latest_questions = Question.objects.order_by('-pub_date')[:5]
-    context = {
-        'latest_questions': latest_questions
-    }
-    return render(request, 'sshapp/index.html', context)
+class IndexView(generic.ListView):
+    template_name = 'sshapp/index.html'
+    context_object_name = 'latest_questions'
+
+    def get_queryset(self):
+        """Return the last five published questions"""
+        return Question.objects.order_by('-pub_date')[:5]
 
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'sshapp/detail.html', {
-        'question': question
-    })
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'sshapp/detail.html'
 
 
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'sshapp/results.html', {
-        'question': question
-    })
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'sshapp/results.html'
 
 
 def vote(request, question_id):
