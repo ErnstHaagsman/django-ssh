@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="ssh://eh@192.168.2.112:22/usr/bin/python3" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" serverName="py35-vbox" autoUploadExternalChanges="true">
     <serverData>
+      <paths name="py35-vbox">
+        <serverdata>
+          <mappings>
+            <mapping deploy="djangossh" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="ssh://eh@192.168.2.112:22/usr/bin/python3">
         <serverdata>
           <mappings>
