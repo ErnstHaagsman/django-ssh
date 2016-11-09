@@ -17,6 +17,14 @@ class Question(models.Model):
     def was_published_recently(self):
         return timezone.now() - datetime.timedelta(days=1) <= self.pub_date <= timezone.now()
 
+    def bump_question(self):
+        """Any question older than a day can be bumped to the top"""
+        old_post = self.pub_date <= timezone.now() - datetime.timedelta(days=1)
+        self.pub_date = timezone.now() if old_post else self.pub_date
+
+        if not old_post:
+            raise RuntimeError
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

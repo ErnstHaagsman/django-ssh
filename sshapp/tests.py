@@ -17,3 +17,17 @@ class QuestionMethodTests(TestCase):
         time = timezone.now() + datetime.timedelta(days=30)
         future_question = Question(pub_date=time)
         self.assertIs(future_question.was_published_recently(), False)
+
+    def test_can_bump_old_question(self):
+        """
+        You should be able to bump old questions
+        """
+        # arrange
+        time = timezone.now() - datetime.timedelta(days=2)
+        old_question = Question(pub_date=time)
+
+        # act
+        old_question.bump_question()
+
+        # assert
+        self.assertGreaterEqual(old_question.pub_date, timezone.now() - datetime.timedelta(seconds=1))
