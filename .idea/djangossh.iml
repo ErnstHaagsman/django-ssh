@@ -13,7 +13,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 2.7.12 virtualenv at C:\Users\Ernst.Haagsman\django-ssh-local" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.5.2 Vagrant VM at C:\Users\Ernst.Haagsman\PycharmProjects\djangossh (/home/ubuntu/django_venv/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">

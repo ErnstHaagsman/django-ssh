@@ -1,0 +1,10 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '{{ django_database }}',
+        'USER': '{{ django_database_user }}',
+        'PASSWORD': '{{ django_database_pass }}',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    }
+}

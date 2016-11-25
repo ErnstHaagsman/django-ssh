@@ -1,0 +1,59 @@
+- name: Set up Django
+  hosts: all
+  become: yes
+  vars:
+    - venv_home: "/home/ubuntu/django_venv/"
+    - workdir: /vagrant
+    - django_superuser: eh
+    - django_superuser_pass: abcdef
+    - django_database: djangodb
+    - django_database_user: django
+    - django_database_pass: nobody_will_ever_guess_this_forreal_dude
+  tasks:
+    - name: Install prerequisites
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        - postgresql
+        - python3
+        - python3-pip
+        - python3-venv
+        - python-psycopg2
+        - libpq-dev
+
+    - name: Create virtualenv
+      become_user: ubuntu
+      command: "python3 -m venv {{ venv_home }} creates={{ venv_home }}"
+
+    - name: Pip install
+      become_user: ubuntu
+      pip:
+        requirements: "{{ workdir }}/requirements.txt"
+        virtualenv_python: python3
+        virtualenv: "{{ venv_home }}"
+
+    - name: Configure database user
+      postgresql_user:
+        name: "{{ django_database_user }}"
+        password: "{{ django_database_pass }}"
+      become_user: postgres
+
+    - name: Set up database
+      postgresql_db:
+        name: "{{ django_database }}"
+        owner: "{{ django_database_user }}"
+        encoding: UTF8
+      become_user: postgres
+
+    - name: Set up local_settings.py
+      template:
+        src: ansible-templates/local_settings.py.j2
+        dest: "{{ workdir }}/djangossh/local_settings.py"
+
+    - name: Handle Django manage tasks
+      django_manage:
+        command: "{{ item }}"
+        app_path: "{{ workdir }}"
+        virtualenv: "{{ venv_home }}"
+      with_items:
+        - migrate
+
