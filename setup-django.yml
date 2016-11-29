@@ -2,8 +2,12 @@
   hosts: all
   become: yes
   vars:
-    - venv_home: "/home/ubuntu/django_venv/"
+    - home_dir: "/home/ubuntu"
+    - venv_home: "{{ home_dir }}/django_venv/"
+    - scripts_dir: "{{ home_dir }}/scripts"
     - workdir: /vagrant
+    - project_name: djangossh
+    - settings_module: "{{ project_name }}.settings"
     - django_superuser: eh
     - django_superuser_pass: abcdef
     - django_database: djangodb
@@ -56,4 +60,20 @@
         virtualenv: "{{ venv_home }}"
       with_items:
         - migrate
+
+    - name: Create scripts directory
+      file: "path={{ scripts_dir }} state=directory"
+
+    - name: Create admin script
+      template:
+        src: ansible-scripts/create_admin.py.j2
+        dest: "{{ scripts_dir }}/create_admin.py"
+        mode: 0755
+
+    - name: Set Django super user
+      script: "{{ scripts_dir }}/create_admin.py"
+      environment:
+        PATH: "{{ venv_home }}/bin"
+        ADMIN_USER: "{{ django_superuser }}"
+        ADMIN_PASSWORD: "{{ django_superuser_pass }}"
 
